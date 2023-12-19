@@ -1,0 +1,14 @@
+GET http://localhost:3000/norte
+
+###
+
+POST http://localhost:4000/Rutas
+Content-Type: application/json
+
+{
+    "ruta": 49,
+    "volumen": 100,
+    "densidad": 1.00000,
+    "grasa": 0.050,
+    "proteina": 0.050
+}
