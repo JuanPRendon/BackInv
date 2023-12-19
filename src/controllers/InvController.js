@@ -1,5 +1,5 @@
 import {getConexion,sql} from "../database/conexion";
-import { createToken } from "../libs/jwt";
+
 
   export const GetMateriales = async(req,res) => {
     try{
