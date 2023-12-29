@@ -16,6 +16,53 @@ import {getConexion,sql} from "../database/conexion";
     }
   }
 
+  export const getAlmacenes = async(req,res) => {
+    try{
+      const pool = await getConexion();
+      const result = await pool.request()
+        .query(`select almacen as label from materiales group by almacen`)
+      res.json(result.recordset)
+      pool.close(); 
+    } catch (error) {
+      res.status(500);
+      res.send(error.message);
+    }
+  }
+
+  export const recuento = async(req,res) => {
+    try{
+      const pool = await getConexion();
+      const result = await pool.request()
+        .execute('recuento')
+      pool.close();
+      // Objeto para almacenar los datos transformados
+      const transformedData = {};
+      
+      // Iterar sobre los datos originales y agrupar por material y almacen
+      result.recordset.forEach((item) => {
+        const key = `${item.material}_${item.almacen}_${item.sap}`;
+        if (!transformedData[key]) {
+          transformedData[key] = {
+            material: item.material,
+            almacen: item.almacen,
+            sap: item.sap,
+            [`conteo${item.conteo}`]: item.cantidad,
+            [`diferencia${item.conteo}`]: item.cantidad - item.sap,
+          };
+        } else {
+          transformedData[key][`conteo${item.conteo}`] = item.cantidad;
+          transformedData[key][`diferencia${item.conteo}`] = item.cantidad - item.sap;
+        }
+      });
+      const ultData = Object.values(transformedData)
+      res.json(ultData)
+    } catch (error) {
+      res.status(500);
+      res.send(error.message);
+    }
+  }
+
+
   export const getConteo = async(req,res) => {
     try{
       const {almacen,grupo} = req.cookies
@@ -91,6 +138,7 @@ import {getConexion,sql} from "../database/conexion";
     }
   }
 
+  
   export const getGrupo =async(req,res) => {
     try{
       const pool = await getConexion();
@@ -113,14 +161,14 @@ import {getConexion,sql} from "../database/conexion";
 
   export const registroGrupo = async(req,res) => {
     try {
-        const {usuario} = req.body
+        const {grupo} = req.body
         const pool = await getConexion();
         await pool
         .request()
-        .input('nombre',sql.VarChar, usuario.usuario)
-        .input('contraseña',sql.VarChar, usuario.pass)
-        .input('almacen',sql.Int, usuario.almacen)
-        .input('conteo',sql.Int, usuario.conteo)
+        .input('nombre',sql.VarChar, grupo.grupo)
+        .input('contraseña',sql.Int, grupo.pass)
+        .input('almacen',sql.Int, grupo.almacen)
+        .input('conteo',sql.Int, grupo.conteo)
         .execute('createGrupo')
         pool.close()
         res.status(200).json({message:"grupo creado"})
@@ -131,16 +179,16 @@ import {getConexion,sql} from "../database/conexion";
 
   export const updateGrupo = async(req,res) => {
     try{
-      //const {idConteo} = req.body
-      console.log(req.body);
-      // const pool = await getConexion();
-      // await pool.request()
-      // .input('idConteo', sql.Int , idConteo.idConteo)
-      // .input('ubicacion', sql.VarChar, idConteo.ubicacion)
-      // .input('numeroLote', sql.VarChar, idConteo.lote)
-      // .input('cantidad', sql.Int, idConteo.cantidad)
-      // .execute('updateConteo')
-      // pool.close();
+      const {idGrupo} = req.body
+      const pool = await getConexion();
+      await pool.request()
+      .input('idGrupo', sql.Int , idGrupo.idGrupo)
+      .input('usuario', sql.VarChar, idGrupo.usuario)
+      .input('pass', sql.Int, idGrupo.pass)
+      .input('almacen', sql.Int, idGrupo.almacen)
+      .input('conteo', sql.Int, idGrupo.conteo)
+      .execute('updateGrupo')
+      pool.close();
       res.status(200).json({message:"Grupo Actualizado"})
     } catch (error) {
       res.status(500);
@@ -186,6 +234,68 @@ import {getConexion,sql} from "../database/conexion";
     } catch (error) {
       res.status(500).json({message:error.message})
     }
+  }
+
+  export const getUsuario =async(req,res) => {
+    try{
+      const pool = await getConexion();
+      const result = await pool.request()
+      .query(`select * from usuario`)
+      res.json(result.recordset)
+      pool.close(); 
+    } catch (error) {
+      res.status(500);
+      res.send(error.message);
+    }
+  }
+
+  export const registroUsuario = async(req,res) => {
+    try {
+        const {user} = req.body
+        const pool = await getConexion();
+        await pool
+        .request()
+        .input('nombre',sql.VarChar, user.usuario)
+        .input('contraseña',sql.VarChar, user.pass)
+        .execute('crearUsuario')
+        pool.close()
+        res.status(200).json({message:"Usuario creado"})
+    } catch (error) {
+      res.status(500).json({message:error.message})
+    }
+  }
+
+  export const updateUsuario = async(req,res) => {
+    try{
+      const {idUser} = req.body
+      const pool = await getConexion();
+      await pool.request()
+      .input('idUser', sql.Int , idUser.idUser)
+      .input('usuario', sql.VarChar, idUser.user)
+      .input('pass', sql.Int, idUser.pass)
+      .execute('updateUser')
+      pool.close();
+      res.status(200).json({message:"Grupo Actualizado"})
+    } catch (error) {
+      res.status(500);
+      res.send(error.message);
+    }
+  }
+
+  export const deleteUsuario = async(req,res) => {
+    try{
+      const {id} = req.query
+      console.log(req.query);
+      const pool = await getConexion();
+      const result = await pool.request()
+      .input('idUser', sql.Int , id.id)
+      .execute('deleteUser')
+      pool.close();
+      res.json(result)
+    } catch (error) {
+      res.status(500);
+      res.send(error.message);
+    }  
   }
 
   export const loginUser = async(req,res) =>{

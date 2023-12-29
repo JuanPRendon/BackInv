@@ -9,8 +9,8 @@ const app= express()
 const cors = require("cors")
 app.use(
     cors({
-        // origin: 'http://192.168.2.182:3000',
-        origin: 'http://localhost:3000',
+        origin: 'http://192.168.2.182:3000',
+        // origin: 'http://localhost:3000',
         credentials: true
     })
 )
