@@ -1,7 +1,18 @@
 import {getConexion,sql} from "../database/conexion";
 
-
-  export const GetMateriales = async(req,res) => {
+export const getMateriales = async(req,res) => {
+  try{
+    const pool = await getConexion();
+    const result = await pool.request()
+    .query(`select * from materiales`)
+    res.json(result.recordset)
+    pool.close(); 
+  } catch (error) {
+    res.status(500);
+    res.send(error.message);
+  }
+}
+  export const GetMaterialesConteo = async(req,res) => {
     try{
       const {almacen} = req.cookies
       const pool = await getConexion();
@@ -214,6 +225,7 @@ import {getConexion,sql} from "../database/conexion";
   
   export const loginGrupo = async(req,res) => {
     const {grupo} = req.body
+    console.log(grupo);
     try {
         const pool = await getConexion();
        const result = await pool.request()
@@ -226,7 +238,7 @@ import {getConexion,sql} from "../database/conexion";
         res.cookie('almacen',result.recordset[0].almacen)
         return res.status(200).json({message:"login"})
         
-        // const token = await createToken({id:nombreGrupo})
+        // const token = await createToken({id:grupo.grupo})
         // res.cookie('token',token);
         //   res.json({
         //     message:"Login Grupo"

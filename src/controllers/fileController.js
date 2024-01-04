@@ -1,30 +1,30 @@
-import { getConexion, sql } from "../database/conexion";
-const fs = require('fs');
+import { getConexion } from "../database/conexion";
 
-async function registroMateriales(filePath) {
-  try {;
-    const pool = await getConexion();
-
-    const table = new sql.Table('materiales1');
-    table.create = false;
-    table.columns.add('idMaterial', sql.Int),{nullable: true};
-    table.columns.add('nombre', sql.VarChar(40)),{nullable: true};
-    table.columns.add('cantidad', sql.Int),{nullable: true}
-    table.columns.add('almacen', sql.Int),{nullable: true}
-
-    const data = fs.readFileSync(filePath, 'utf8');
-    const rows = data.split('\n');
-    rows.forEach((row) => {
-      const values = row.split(';');
-      table.rows.add(parseInt(values[0]), values[1], parseInt(values[2]),parseInt(values[3]));
-    });
-    const result = pool.request();
-    console.log(table)
-    await result.bulk(table)
-    await pool.close();
-  } catch (error) {
-    console.error('Error al realizar bulk insert:',error.code +" a "+error.message);
+export const registroMateriales = async(req,res) => {
+    try{
+      const pool = await getConexion();
+      const request = await pool.request()
+        .execute('registroMateriales')
+      console.log(request.rowsAffected);
+      if (request.rowsAffected > 0) {
+        res.status(200).json({message:'works'})
+      }else{
+        res.status(406).json({message:'dont work'})
+      }
+      pool.close(); 
+    } catch (error) {
+      res.status(500);
+      res.send(error.message);
+    }
   }
-}
 
-export default registroMateriales
+  const multer = require('multer');
+  const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, '//svrdbvm-auralac/Users/administrador.AURALAC/Desktop/Inteligencia de negocios/Materiales Inventarios')
+      },
+      filename: function (req, file, cb) {
+        cb(null, 'EXPORT.csv')
+      }
+    })
+  export const upload = multer({ storage: storage });

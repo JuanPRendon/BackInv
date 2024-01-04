@@ -1,20 +1,16 @@
 import {Router} from "express"
-import { GetMateriales, loginGrupo, registroGrupo, registroConteo, getGrupo, getConteo, updateConteo, deleteConteo, loginUser,deleteGrupo,updateGrupo, recuento, getAlmacenes, getUsuario, registroUsuario, updateUsuario, deleteUsuario } from "../controllers/InvController"
-import registroMateriales from "../controllers/fileController";
-const multer = require('multer');
-const upload = multer({ dest: '../../archivos/' });
+import { getMateriales,GetMaterialesConteo, loginGrupo, registroGrupo, registroConteo, getGrupo, getConteo, updateConteo, deleteConteo, loginUser,deleteGrupo,updateGrupo, recuento, getAlmacenes, getUsuario, registroUsuario, updateUsuario, deleteUsuario } from "../controllers/InvController"
+import {registroMateriales,upload} from "../controllers/fileController"
+
 
 const router = Router()
-    router.get('/materiales', GetMateriales)
-    router.post('/materiales', upload.single('file'),async (req,res) => {
-        const filepath = req.file.path
-        await registroMateriales(filepath)
-        res.json({ success: true });
-    })
+    router.get('/materiales',getMateriales)
+    router.post('/materiales',upload.single("file"), registroMateriales)
 
-    router.get('/almacenes', getAlmacenes)
+    router.get('/almacenes',getAlmacenes)
     router.get('/recuento',recuento)
 
+    router.get('/materialesConteo',GetMaterialesConteo)
     router.get('/conteo',getConteo)
     router.post('/conteo',registroConteo)
     router.put('/conteo',updateConteo)
