@@ -50,14 +50,26 @@ import {createToken} from '../libs/jwt'
       const {idComposicion} = req.params
       const pool = await getConexion();
 
-      const analisis = await pool.request()
-      .execute('getAnalisis')
+      const result = await pool.request()
+      .input('idComposicion', sql.Int, idComposicion)
+      .execute('getComposicion')
       pool.close()
 
-    return res.status(200).json({
-      rol : rol,
-      analisis: analisis.recordset,
-    })
+    return res.status(200).json(result.recordset)
+    } catch (error) {
+      
+    }
+  }
+
+  export const getRutas = async(req,res) => {
+    try {
+      const pool = await getConexion()
+
+      const result = await pool.request()
+      .execute('getRutas')
+    pool.close()
+
+    return res.json(result.recordset)
     } catch (error) {
       
     }
