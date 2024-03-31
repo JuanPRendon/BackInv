@@ -1,7 +1,11 @@
 const express = require('express');
+<<<<<<< HEAD
 // const { createServer } = require('http');
 // const {Server} = require("socket.io");
 import router from './routes/invRoutes';
+=======
+import Routers from './routes/Routes';
+>>>>>>> ac400390c638a2400625ad33a4e8989c16260781
 import cookieParser from 'cookie-parser';
 
 const app= express()
@@ -19,19 +23,5 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded({extended:false}));
 app.use(router); 
-
-// const server = createServer(app)
-// const io = new Server(server, {
-//   cors: {
-//     origin: "https://example.com", // Replace with your frontend URL
-//     methods: ["GET"],
-//     allowedHeaders: ["my-custom-header"],
-//     credentials: true,
-//   },
-// });
-
-// io.on("connection", (socket) => {
-//   console.log("connected");
-// });
 
 export default app

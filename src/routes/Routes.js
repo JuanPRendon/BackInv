@@ -1,4 +1,5 @@
 import {Router} from "express"
+<<<<<<< HEAD
 import { getMateriales,GetMaterialesConteo, loginGrupo, registroGrupo, registroConteo, getGrupo, getConteo, updateConteo, deleteConteo, loginUser,deleteGrupo,updateGrupo, recuento, getAlmacenes, getUsuario, registroUsuario, updateUsuario, deleteUsuario, getMaterialesDoc } from "../controllers/InvController"
 import {registroMateriales,upload} from "../controllers/fileController"
 
@@ -31,6 +32,17 @@ const router = Router()
     router.post('/loginGrupo',loginGrupo)
 
     router.post('/loginUser', loginUser)
+=======
+import {login,dashboardCalidad, getAnalisis, getRutas} from '../controllers/InvController'
+import {authToken, isCalidad} from '../middlewares/validations'
 
+
+const router = Router()
+    router.post('/login',login)
+>>>>>>> ac400390c638a2400625ad33a4e8989c16260781
+
+    router.get('/rutas',getRutas)   
+    router.get('/dashCalidad',authToken,dashboardCalidad)
+    router.get('/analisis/:idComposicion',getAnalisis)
 
 export default router
