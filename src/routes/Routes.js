@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { getMateriales,GetMaterialesConteo, loginGrupo, registroGrupo, registroConteo, getGrupo, getConteo, updateConteo, deleteConteo, loginUser,deleteGrupo,updateGrupo, recuento, getAlmacenes, getUsuario, registroUsuario, updateUsuario, deleteUsuario } from "../controllers/InvController"
+import { getMateriales,GetMaterialesConteo, loginGrupo, registroGrupo, registroConteo, getGrupo, getConteo, updateConteo, deleteConteo, loginUser,deleteGrupo,updateGrupo, recuento, getAlmacenes, getUsuario, registroUsuario, updateUsuario, deleteUsuario, getMaterialesDoc } from "../controllers/InvController"
 import {registroMateriales,upload} from "../controllers/fileController"
 
 
@@ -7,7 +7,6 @@ const router = Router()
     router.get('/materiales',getMateriales)
     router.post('/materiales',upload.single("file"), registroMateriales)
 
-    router.get('/almacenes',getAlmacenes)
     router.get('/recuento',recuento)
 
     router.get('/materialesConteo',GetMaterialesConteo)
@@ -15,6 +14,8 @@ const router = Router()
     router.post('/conteo',registroConteo)
     router.put('/conteo',updateConteo)
     router.delete('/conteo',deleteConteo)
+
+    router.get('/materialesDocumento', getMaterialesDoc)
 
     router.get('/grupo',getGrupo)
     router.post('/grupo',registroGrupo)

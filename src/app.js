@@ -1,7 +1,7 @@
 const express = require('express');
 // const { createServer } = require('http');
 // const {Server} = require("socket.io");
-import Routers from './routes/Routes';
+import router from './routes/invRoutes';
 import cookieParser from 'cookie-parser';
 
 const app= express()
@@ -9,8 +9,8 @@ const app= express()
 const cors = require("cors")
 app.use(
     cors({
-        origin: 'http://192.168.2.182:3000',
-        // origin: 'http://localhost:3000',
+        // origin: 'http://192.168.2.182:3000',
+        origin: 'http://localhost:3000',
         credentials: true
     })
 )
@@ -18,7 +18,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded({extended:false}));
-app.use(Routers); 
+app.use(router); 
 
 // const server = createServer(app)
 // const io = new Server(server, {
