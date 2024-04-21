@@ -4,7 +4,11 @@ const dbSettings = {
     user: 'sa' ,
     password: 'S3rv1c10st1c*' ,
     server: '192.168.1.9\\BBI' ,
+<<<<<<< HEAD
+    database : 'inventario' ,
+=======
     database : 'Leche' ,
+>>>>>>> ac400390c638a2400625ad33a4e8989c16260781
 
     options: {
         encrypt: true, // for azure
